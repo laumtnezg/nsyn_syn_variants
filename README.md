@@ -4,7 +4,8 @@ Annotation of exons with variants from the 1000 genomes project and analysis of 
 
 This is an example of the resulting plot as shown in APPRIS principal isoforms and MANE Select transcripts define reference splice variants
 
-[Figure.pptx](https://github.com/laumtnezg/nsyn_syn_variants/files/9675286/Figure.pptx)
+![image](https://user-images.githubusercontent.com/113434834/193051987-40aa6e11-0722-4f8b-9d69-c17cd44c2923.png)
+
 
 
 
