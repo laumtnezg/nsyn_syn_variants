@@ -1,0 +1,63 @@
+import glob
+import sys
+
+#### GLOBAL scope functions ####
+def get_resource(rule, resource) -> int:
+    """
+    Attempt to parse config.yaml to retrieve resources available for a given
+    rule. It will revert to default if a key error is found. Returns an int.
+    with the allocated resources available for said rule. Ex: "threads": 1
+    """
+    try:
+        return config["resources"][rule][resource]
+    except KeyError: 
+        print(
+            f"Failed to resolve resource for {rule}/{resource}: using default parameters"
+        )
+        return config["resources"]["default"][resource]
+
+
+def get_params(rule, param) -> int:
+    """
+    Attempt to parse config.yaml to retrieve parameters available for a given
+    rule. It will crash otherwise.
+    """
+    try:
+        return config["parameters"][rule][param]
+    except KeyError:  
+        print(f"Failed to resolve parameter for {rule}/{param}: Exiting...")
+        sys.exit(1)
+
+#### GLOBAL PARAMETERS ####
+
+configfile: "config.yaml"
+
+
+FASTAS = config["folder"]
+OUTDIR = config["outdir"]
+LOGDIR = config["logdir"]
+
+
+IDS, = glob_wildcards(f"{FASTAS}/{{id}}.fa")
+
+
+rule all:
+    input:
+        expand(f"{OUTDIR}/{{id}}.a3m", id=IDS),
+
+
+rule run_hhblits:
+    input:
+        f"{FASTAS}/{{id}}.fa",
+    output:
+        f"{OUTDIR}/{{id}}.a3m",
+    params:
+        get_params("hhblits", "database"),
+    threads: get_resource("default", "threads")
+    resources:
+        mem_mb=get_resource("default", "mem_mb"),
+        walltime=get_resource("default", "walltime"),
+    log:
+        f"{LOGDIR}/{{id}}.log",
+    shell:
+        "hhblits -cpu {threads} -i {input} -d {params} -oa3m {output}"
