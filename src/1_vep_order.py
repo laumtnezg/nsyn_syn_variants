@@ -1,11 +1,12 @@
 import sys
 #path = sys.argv[1]
 #file_vep_name = sys.argv[2]
+#out_name = sys.argv[3]
+#out_no_name = sys.argv[4]
 path = '/home/lmartinezg/Documents/Laura/exons_dnds/'
 # load different files if youre doing a comparison analysis, inside each type theres usually principal and alt
-
-exons_list = ['NC_upstream']
-nc_exons = ['nc_upstream']
+NC_upstream = ['nc_upstream']
+exons_list = [NC_upstream]
 for exons_type in exons_list:
     print(exons_type)
     for exon_type in exons_type:
@@ -30,6 +31,7 @@ for exons_type in exons_list:
                 dict_chromosomes[chrom] = []
             dict_chromosomes[chrom].append(posi)
         fhandle.close()
+        #remove when in pipeline
         out_name = path + 'results_' + exon_type + 'wvep.gff'
         out_no_name = path + 'results_' + exon_type + 'novep.gff'
         outhandle = open(out_name, "w")
